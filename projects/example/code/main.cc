@@ -1,22 +1,19 @@
-//------------------------------------------------------------------------------
-// main.cc
-// (C) 2015-2020 Individual contributors, see AUTHORS file
-//------------------------------------------------------------------------------
-#include "config.h"
-#include "exampleapp.h"
+#include "VectorMath.h";
+#include <iostream>;
+using namespace std;
 
-//------------------------------------------------------------------------------
-/**
-*/
-int
-main(int argc, const char** argv)
-{
-	Example::ExampleApp app;
-	if (app.Open())
-	{
-		app.Run();
-		app.Close();
-	}
-	app.Exit();
-	
+void main() {
+	VectorMath vectorA (1, 2, 3, 4);
+	vectorA.printVector();
+	VectorMath vectorB(5, 6, 7, 8);
+	VectorMath vectorResult;
+	vectorResult = vectorA + vectorB;
+	vectorResult.printVector();
+	vectorResult = vectorB - vectorA;
+	vectorResult.printVector();
+	vectorResult = vectorResult * 4;
+	vectorResult.printVector();
+	cout << vectorA.lengthVector() << endl;
+	vectorA.normalizeVector();
+	vectorA.printVector();
 }
