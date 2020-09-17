@@ -3,24 +3,24 @@
 
 class MatrixMath
 {
-	VectorMath matrix[4];
+	VectorMath4 matrix[4];
 
 public:
-	MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In, VectorMath col4In);
-	MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In);
+	MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath4 col3In, VectorMath4 col4In);
+	MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath4 col3In);
 	MatrixMath();
 	void printMatrix();
-	VectorMath operator[](int index)const;
-	VectorMath& operator[](int index);
+	VectorMath4 operator[](int index)const;
+	VectorMath4& operator[](int index);
 	MatrixMath matrixMultiplication(MatrixMath matrixA);
-	VectorMath vectorMultiplication(VectorMath vectorA);
-	MatrixMath rotateMatrix(float angle, VectorMath dir);
+	VectorMath4 vectorMultiplication(VectorMath4 vectorA);
+	MatrixMath rotateMatrix(float angle, VectorMath4 dir);
 	MatrixMath transposeMatrix();
-	bool inverseMatrix();
+	MatrixMath inverseMatrix();
 };
 
 /// constructor for x, y, z and w
-MatrixMath::MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In, VectorMath col4In) {
+inline MatrixMath::MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath4 col3In, VectorMath4 col4In) {
 	matrix[0] = col1In;
 	matrix[1] = col2In;
 	matrix[2] = col3In;
@@ -28,32 +28,32 @@ MatrixMath::MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In, 
 }
 
 /// constructor for x, y, z and preset w
-MatrixMath::MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In) {
+inline MatrixMath::MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath4 col3In) {
 	matrix[0] = col1In;
 	matrix[1] = col2In;
 	matrix[2] = col3In;
-	matrix[3] = VectorMath(1);
+	matrix[3] = VectorMath4(1);
 }
 
 /// constuctor for x, y, z and empty w
-MatrixMath::MatrixMath() {
-	for (int  i = 0; i < 4; i++)
-	matrix[i] = VectorMath();
-
+inline MatrixMath::MatrixMath() {
+	for (int  i = 0; i < 3; i++)
+	matrix[i] = VectorMath4();
+	matrix[3] = VectorMath4(1);
 }
 
 /// [] operator overload
-VectorMath& MatrixMath::operator[](int index) {
+inline VectorMath4& MatrixMath::operator[](int index) {
 	return matrix[index];
 }
 
 /// [] operator overload
-VectorMath MatrixMath::operator[](int index)const {
+inline VectorMath4 MatrixMath::operator[](int index)const {
 	return matrix[index];
 }
 
 /// mathematical matrix multiplication using matrix * matrix, (this * argument)
-MatrixMath MatrixMath::matrixMultiplication(MatrixMath matrixA) {
+inline MatrixMath MatrixMath::matrixMultiplication(MatrixMath matrixA) {
 	MatrixMath tempMatrix;
 	for (int i = 0; i < 4; i++)
 	{
@@ -61,7 +61,7 @@ MatrixMath MatrixMath::matrixMultiplication(MatrixMath matrixA) {
 		{
 			for (int k = 0; k < 4; k++)
 			{
-				tempMatrix[j][i] += (*this)[j][i] * matrixA[k][j];
+				tempMatrix[j][i] += (*this)[j][k] * matrixA[k][i];
 			}
 		}
 
@@ -70,8 +70,8 @@ MatrixMath MatrixMath::matrixMultiplication(MatrixMath matrixA) {
 }
 
 /// mathematical matrix/vector multiplication using matrix * vector, (this * argument)
-VectorMath MatrixMath::vectorMultiplication(VectorMath vectorA) {
-	VectorMath tempVector;
+inline VectorMath4 MatrixMath::vectorMultiplication(VectorMath4 vectorA) {
+	VectorMath4 tempVector;
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
@@ -82,27 +82,27 @@ VectorMath MatrixMath::vectorMultiplication(VectorMath vectorA) {
 	return tempVector;
 }
 
-/// rotates matrix. takes in the rotation angle as float and the rotation axis as VectorMath
-MatrixMath MatrixMath::rotateMatrix(float rad, VectorMath dir) {
+/// rotates matrix. takes in the rotation angle as float and the rotation axis as VectorMath4
+inline MatrixMath rotateMatrix(float rad, VectorMath4 dir) {
 	MatrixMath rotMat;
 	dir.normalize();
 	// [columns][rows]
-	rotMat[0][0] = cos(rad) + (1 - cos(rad) * pow(dir.x, 2));
+	rotMat[0][0] = cos(rad) + (1 - cos(rad)) * pow(dir.x, 2);
 	rotMat[0][1] = (1-cos(rad))*dir.x*dir.y+dir.z*sin(rad);
 	rotMat[0][2] = (1-cos(rad))*dir.x*dir.z+dir.y*sin(rad);
 
 	rotMat[1][0] = (1 - cos(rad)) * dir.x * dir.y - dir.z * sin(rad);
-	rotMat[1][1] = cos(rad) + (1 - cos(rad) * pow(dir.y, 2));
+	rotMat[1][1] = cos(rad) + (1 - cos(rad)) * pow(dir.y, 2);
 	rotMat[1][2] = (1 - cos(rad)) * dir.y * dir.z + dir.x * sin(rad);
 
 	rotMat[2][0] = (1 - cos(rad)) * dir.x * dir.z + dir.y * sin(rad);
 	rotMat[2][1] = (1 - cos(rad)) * dir.y * dir.z - dir.x * sin(rad);
-	rotMat[2][2] = cos(rad) + (1 - cos(rad) * pow(dir.z, 2));
+	rotMat[2][2] = cos(rad) + (1 - cos(rad)) * pow(dir.z, 2);
 
 	return rotMat;
 }
 /// transposes the matrix
-MatrixMath MatrixMath::transposeMatrix() {
+inline MatrixMath MatrixMath::transposeMatrix() {
 	MatrixMath temp;
 	for (char i = 0; i < 16; i++)
 	{
@@ -112,7 +112,7 @@ MatrixMath MatrixMath::transposeMatrix() {
 }
 
 /// calculates the inverse of a matrix and returns a bool indicating wether its determenant is zero
-inline bool MatrixMath::inverseMatrix()
+inline MatrixMath MatrixMath::inverseMatrix()
 {
 	//to hold the matrix values
 	double m[16];
@@ -267,18 +267,13 @@ inline bool MatrixMath::inverseMatrix()
 
 	det = m[0] * tempMatrix[0][0] + m[1] * tempMatrix[1][0] + m[2] * tempMatrix[2][0] + m[3] * tempMatrix[3][0];
 	if (det == 0)
-		return false;
+		return MatrixMath(VectorMath4(1,0,0,0), VectorMath4(0, 1, 0, 0), VectorMath4(0, 0, 1, 0), VectorMath4(0, 0, 0, 1));
 
-	for (char i = 0; i < 16; i++)
-	{
-		(*this)[i / 4][i % 4] = tempMatrix[i / 4][i % 4] / det;
-	}
-
-	return true;
+	return tempMatrix;
 }
 
 /// This function is used to print matrices.
-void MatrixMath::printMatrix() {
+inline void MatrixMath::printMatrix() {
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
