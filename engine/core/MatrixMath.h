@@ -1,26 +1,31 @@
 ﻿#pragma once
+#define _USE_MATH_DEFINES
 #include "VectorMath.h";
+#include <math.h>
 
 class MatrixMath
 {
-	VectorMath matrix[4];
+	VectorMath4 matrix[4];
 
 public:
-	MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In, VectorMath col4In);
-	MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In);
-	MatrixMath();
-	void printMatrix();
-	VectorMath operator[](int index)const;
-	VectorMath& operator[](int index);
-	MatrixMath matrixMultiplication(MatrixMath matrixA);
-	VectorMath vectorMultiplication(VectorMath vectorA);
-	MatrixMath rotateMatrix(float angle, VectorMath dir);
-	MatrixMath transposeMatrix();
-	bool inverseMatrix();
+	MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath4 col3In, VectorMath4 col4In);
+	MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath4 col3In);
+	MatrixMath(float w = 1);
+	static MatrixMath TranslationMatrix(VectorMath3 W);
+	void PrintMatrix();
+	VectorMath4 operator[](int index)const;
+	VectorMath4& operator[](int index);
+	MatrixMath operator*(MatrixMath matrixA);
+	VectorMath4 VectorMultiplication(VectorMath4 vectorA);
+	//MatrixMath RotateMatrix(float angle, VectorMath4 dir);
+	//static MatrixMath Identity();
+	MatrixMath TransposeMatrix();
+	MatrixMath InverseMatrix();
+	static MatrixMath ProjectionMatrix(float FOV, float AspectRatio, float Near, float Far);
 };
 
 /// constructor for x, y, z and w
-MatrixMath::MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In, VectorMath col4In) {
+inline MatrixMath::MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath4 col3In, VectorMath4 col4In) {
 	matrix[0] = col1In;
 	matrix[1] = col2In;
 	matrix[2] = col3In;
@@ -28,40 +33,59 @@ MatrixMath::MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In, 
 }
 
 /// constructor for x, y, z and preset w
-MatrixMath::MatrixMath(VectorMath col1In, VectorMath col2In, VectorMath col3In) {
+inline MatrixMath::MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath4 col3In) {
 	matrix[0] = col1In;
 	matrix[1] = col2In;
 	matrix[2] = col3In;
-	matrix[3] = VectorMath(1);
+	matrix[3] = VectorMath4(1);
+}
+// returns translation matrix
+inline MatrixMath MatrixMath::TranslationMatrix(VectorMath3 W) {
+	MatrixMath temp;
+	temp[0] = VectorMath4(1,0,0,0);
+	temp[1] = VectorMath4(0,1,0,0);
+	temp[2] = VectorMath4(0,0,1,0);
+	temp[3] = VectorMath4(W, 1);
+	return temp;
+}
+
+//Returns identity matrix
+inline MatrixMath Identity() {
+	MatrixMath temp;
+	temp[0] = VectorMath4(1,0,0,0);
+	temp[1] = VectorMath4(0,1,0,0);
+	temp[2] = VectorMath4(0,0,1,0);
+	temp[3] = VectorMath4(0,0,0,1);
+	return temp;
 }
 
 /// constuctor for x, y, z and empty w
-MatrixMath::MatrixMath() {
-	for (int  i = 0; i < 4; i++)
-	matrix[i] = VectorMath();
-
+inline MatrixMath::MatrixMath(float w) {
+	for (int  i = 0; i < 3; i++)
+	matrix[i] = VectorMath4();
+	matrix[3] = VectorMath4(w);
 }
-
 /// [] operator overload
-VectorMath& MatrixMath::operator[](int index) {
+inline VectorMath4& MatrixMath::operator[](int index) {
 	return matrix[index];
 }
 
 /// [] operator overload
-VectorMath MatrixMath::operator[](int index)const {
+inline VectorMath4 MatrixMath::operator[](int index)const {
 	return matrix[index];
 }
 
 /// mathematical matrix multiplication using matrix * matrix, (this * argument)
-MatrixMath MatrixMath::matrixMultiplication(MatrixMath matrixA) {
-	MatrixMath tempMatrix;
+inline MatrixMath MatrixMath::operator*(MatrixMath matrixA) {
+	MatrixMath tempMatrix(0);
+	//[column][row]
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
 			for (int k = 0; k < 4; k++)
 			{
-				tempMatrix[j][i] += (*this)[j][i] * matrixA[k][j];
+				tempMatrix[j][i] += (*this)[k][i] * matrixA[j][k];
 			}
 		}
 
@@ -70,8 +94,8 @@ MatrixMath MatrixMath::matrixMultiplication(MatrixMath matrixA) {
 }
 
 /// mathematical matrix/vector multiplication using matrix * vector, (this * argument)
-VectorMath MatrixMath::vectorMultiplication(VectorMath vectorA) {
-	VectorMath tempVector;
+inline VectorMath4 MatrixMath::VectorMultiplication(VectorMath4 vectorA) {
+	VectorMath4 tempVector;
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
@@ -82,27 +106,27 @@ VectorMath MatrixMath::vectorMultiplication(VectorMath vectorA) {
 	return tempVector;
 }
 
-/// rotates matrix. takes in the rotation angle as float and the rotation axis as VectorMath
-MatrixMath MatrixMath::rotateMatrix(float rad, VectorMath dir) {
+/// rotates matrix. takes in the rotation angle as float and the rotation axis as VectorMath4
+inline MatrixMath RotateMatrix(float rad, VectorMath3 dir) {
 	MatrixMath rotMat;
-	dir.normalize();
+	dir.Normalize();
 	// [columns][rows]
-	rotMat[0][0] = cos(rad) + (1 - cos(rad) * pow(dir.x, 2));
+	rotMat[0][0] = cos(rad) + (1 - cos(rad)) * pow(dir.x, 2);
 	rotMat[0][1] = (1-cos(rad))*dir.x*dir.y+dir.z*sin(rad);
-	rotMat[0][2] = (1-cos(rad))*dir.x*dir.z+dir.y*sin(rad);
+	rotMat[0][2] = (1-cos(rad))*dir.x*dir.z-dir.y*sin(rad);
 
 	rotMat[1][0] = (1 - cos(rad)) * dir.x * dir.y - dir.z * sin(rad);
-	rotMat[1][1] = cos(rad) + (1 - cos(rad) * pow(dir.y, 2));
+	rotMat[1][1] = cos(rad) + (1 - cos(rad)) * pow(dir.y, 2);
 	rotMat[1][2] = (1 - cos(rad)) * dir.y * dir.z + dir.x * sin(rad);
 
 	rotMat[2][0] = (1 - cos(rad)) * dir.x * dir.z + dir.y * sin(rad);
 	rotMat[2][1] = (1 - cos(rad)) * dir.y * dir.z - dir.x * sin(rad);
-	rotMat[2][2] = cos(rad) + (1 - cos(rad) * pow(dir.z, 2));
+	rotMat[2][2] = cos(rad) + (1 - cos(rad)) * pow(dir.z, 2);
 
 	return rotMat;
 }
 /// transposes the matrix
-MatrixMath MatrixMath::transposeMatrix() {
+inline MatrixMath MatrixMath::TransposeMatrix() {
 	MatrixMath temp;
 	for (char i = 0; i < 16; i++)
 	{
@@ -112,7 +136,7 @@ MatrixMath MatrixMath::transposeMatrix() {
 }
 
 /// calculates the inverse of a matrix and returns a bool indicating wether its determenant is zero
-inline bool MatrixMath::inverseMatrix()
+inline MatrixMath MatrixMath::InverseMatrix()
 {
 	//to hold the matrix values
 	double m[16];
@@ -267,18 +291,27 @@ inline bool MatrixMath::inverseMatrix()
 
 	det = m[0] * tempMatrix[0][0] + m[1] * tempMatrix[1][0] + m[2] * tempMatrix[2][0] + m[3] * tempMatrix[3][0];
 	if (det == 0)
-		return false;
+		return MatrixMath(VectorMath4(1,0,0,0), VectorMath4(0, 1, 0, 0), VectorMath4(0, 0, 1, 0), VectorMath4(0, 0, 0, 1));
 
-	for (char i = 0; i < 16; i++)
-	{
-		(*this)[i / 4][i % 4] = tempMatrix[i / 4][i % 4] / det;
-	}
+	return tempMatrix;
+}
 
-	return true;
+inline MatrixMath MatrixMath::ProjectionMatrix(float FOV, float AspectRatio, float Near, float Far) {
+
+	MatrixMath perspectiveMatrix;
+	perspectiveMatrix[0][0] = 1 / tan(FOV * (float)M_PI / 360);
+	perspectiveMatrix[1][1] = AspectRatio / tan(FOV * (float)M_PI / 360);
+	perspectiveMatrix[2][2] = (Near + Far) / (Near - Far);
+	perspectiveMatrix[2][3] = -1;
+	perspectiveMatrix[3][2] = (2 * Near * Far) / (Near - Far);
+	perspectiveMatrix[3][3] = 0;
+
+	perspectiveMatrix.PrintMatrix();
+	return perspectiveMatrix;
 }
 
 /// This function is used to print matrices.
-void MatrixMath::printMatrix() {
+inline void MatrixMath::PrintMatrix() {
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
