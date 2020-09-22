@@ -5,6 +5,7 @@
 
 #Custom ignores
 build/
+dox/
 
 
 # User-specific files

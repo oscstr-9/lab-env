@@ -1,9 +1,16 @@
 #include "config.h"
 #include "MeshResource.h"
+<<<<<<< HEAD
 #include "TextureResource.h"
 
 MeshResource::MeshResource(Vertex vertices[], unsigned int indices[], int numOfVertices, int numOfIndicesIn) {
 	numOfIndices = numOfIndicesIn;
+=======
+
+MeshResource::MeshResource(Vertex vertices[], unsigned int indices[], int numOfVertices, int numOfIndicesIn) {
+	numOfIndices = numOfIndicesIn;
+
+>>>>>>> origin/master
 	glGenBuffers(1, &vertexBuffer);
 	glGenBuffers(1, &indexBuffer);
 
@@ -15,6 +22,7 @@ MeshResource::MeshResource(Vertex vertices[], unsigned int indices[], int numOfV
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+<<<<<<< HEAD
 void MeshResource::Render() {
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -86,4 +94,24 @@ void MeshResource::Destroy() {
 }
 MeshResource::~MeshResource() {
 	Destroy();
+=======
+void MeshResource::render() {
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, NULL);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (GLvoid*)(sizeof(GLfloat) * 3));
+
+	glDrawElements(GL_TRIANGLES, numOfIndices, GL_UNSIGNED_INT, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+MeshResource::~MeshResource() {
+	delete(this);
+>>>>>>> origin/master
 }

@@ -7,6 +7,7 @@ SET(files_render_display
 	window.cc
 	MeshResource.h
 	MeshResource.cpp
+<<<<<<< HEAD
 	Vertex.h
 	TextureResource.h
 	TextureResource.cpp
@@ -14,6 +15,9 @@ SET(files_render_display
 	Camera.cpp
 	stb_Image.h
 )
+=======
+	Vertex.h)
+>>>>>>> origin/master
 SOURCE_GROUP("display" FILES ${files_render_display})
 
 
