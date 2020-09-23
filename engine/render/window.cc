@@ -66,9 +66,9 @@ int32 Window::WindowCount = 0;
 Window::Window() :
 	window(nullptr),
 	vg(nullptr),
-	width(1024),
-	height(768),
-	title("gscept Lab Environment")
+	width(1900),
+	height(1200),
+	title("Appature Science Lab Environment")
 {
 	// empty
 }
