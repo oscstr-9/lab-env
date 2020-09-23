@@ -9,9 +9,13 @@ class MeshResource
 {
 	GLuint vertexBuffer;
 	GLuint indexBuffer;
+	
 public:
 	int numOfIndices;
 	MeshResource(Vertex vertices[], unsigned int indices[], int numOfVertices, int numOfIndicesIn);
-	void render();
+	static MeshResource Cube(float size);
+	void Render();
+	void Destroy();
+
 	~MeshResource();
 };

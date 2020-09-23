@@ -1,5 +1,5 @@
-#ifndef VERTICES_H
-#define VERTICES_H
+#ifndef VERTEX_H
+#define VERTEX_H
 
 #include "core/VectorMath.h"
 
