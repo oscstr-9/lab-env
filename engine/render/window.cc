@@ -68,7 +68,7 @@ Window::Window() :
 	vg(nullptr),
 	width(1900),
 	height(1200),
-	title("Appature Science Lab Environment")
+	title("Aperture Science Lab Environment")
 {
 	// empty
 }

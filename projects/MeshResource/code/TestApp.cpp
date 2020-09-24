@@ -15,23 +15,33 @@ const GLchar* vs =
 "#version 430\n"
 "layout(location=0) in vec3 pos;\n"
 "layout(location=1) in vec4 color;\n"
-"layout(location=0) out vec4 Color;\n"
+"layout(location=2) in vec2 texturesIn;\n"
+
+"out vec4 Colors;\n"
+"out vec2 texturesOut;\n"
+
 "uniform mat4 posMatrix;"
 "uniform mat4 projectionViewMatrix;"
 "uniform vec4 colorVector;"
+"uniform sampler2D textureArray;"
+
 "void main()\n"
 "{\n"
 "	gl_Position = projectionViewMatrix*posMatrix*vec4(pos, 1);\n"
-"	Color = colorVector*color;\n"
+"	Colors = colorVector*color;\n"
+"	texturesOut = texturesIn;\n"
 "}\n";
 
 const GLchar* ps =
 "#version 430\n"
-"layout(location=0) in vec4 color;\n"
+"layout(location=0) in vec4 Colors;\n"
+"layout(location=1) in vec2 texturesOut;\n"
+"uniform sampler2D textureArray;"
+
 "out vec4 Color;\n"
 "void main()\n"
 "{\n"
-"	Color = color;\n"
+"	Color = texture(textureArray, texturesOut)*(vec4(0.3) + Colors*0.7);\n"
 "}\n";
 
 using namespace Display;
@@ -165,6 +175,16 @@ namespace Example
 
 		camera.SetPosition(VectorMath3(0, 0, -5));
 
+		//Import textures
+		TextureResource pumpkinTexture;
+		pumpkinTexture.LoadFromFile("textures/pumpkin.png");
+		TextureResource furnaceTexture;
+		furnaceTexture.LoadFromFile("textures/furnace.png");
+		TextureResource craftingTableTexture;
+		craftingTableTexture.LoadFromFile("textures/craftingTable.png");
+		TextureResource wallTexture;
+		wallTexture.LoadFromFile("textures/wall.png");
+
 		while (this->window->IsOpen())
 		{
 			//MatrixMath finalMatrix(VectorMath4(1, 0, 0), VectorMath4(0, 1, 0), VectorMath4(0, 0, 1), VectorMath4(0,0,0,1));
@@ -191,17 +211,26 @@ namespace Example
 			glUniformMatrix4fv(glGetUniformLocation(program, "projectionViewMatrix"), 1, GL_FALSE, (float*)&camera.GetProjViewMatrix());
 			//quadrilateral->render();
 
+			pumpkinTexture.bindTexture();
 			cubeMesh.Render();
 
 			// extra cubes for fun
 			pos = 1.5;
+			furnaceTexture.bindTexture();
 			MatrixMath finalMatrix1(VectorMath4(1, 0, 0), VectorMath4(0, 1, 0), VectorMath4(0, 0, 1), VectorMath4(pos, 0, 0, 1));
 			glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)&(finalMatrix1*RotateMatrix(rotation, VectorMath3(0,1,0))));
 			cubeMesh.Render();
 
 			pos = -1.5;
+			craftingTableTexture.bindTexture();
 			MatrixMath finalMatrix2(VectorMath4(1, 0, 0), VectorMath4(0, 1, 0), VectorMath4(0, 0, 1), VectorMath4(pos, 0, 0, 1));
 			glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)&(finalMatrix2 * RotateMatrix(rotation, VectorMath3(0,0,1))));
+			cubeMesh.Render();
+
+			pos = 0;
+			wallTexture.bindTexture();
+			MatrixMath finalMatrix3(VectorMath4(25, 0, 0), VectorMath4(0, 25, 0), VectorMath4(0, 0, 25), VectorMath4(pos, 0, 0, 1));
+			glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)&(finalMatrix3));
 			cubeMesh.Render();
 
 			//TextureResource::LoadFromFile("carved_pumpkin.png");

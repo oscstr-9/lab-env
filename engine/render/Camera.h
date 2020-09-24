@@ -1,3 +1,4 @@
+#pragma once
 #include "core/VectorMath.h"
 #include "core/MatrixMath.h"
 

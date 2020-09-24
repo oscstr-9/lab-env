@@ -9,14 +9,17 @@ TextureResource::TextureResource()
 	//cool
 }
 
-inline void TextureResource::LoadFromFile(const char* file) {
+void TextureResource::bindTexture(){
+	glBindTexture(GL_TEXTURE_2D, texture);
+	}
+
+void TextureResource::LoadFromFile(const char* file) {
 
 	int width, height, channels;
-	GLuint texture;
 
 	unsigned char* img = stbi_load(file, &width, &height, &channels, 0);
 	if (img == NULL) {
-		printf("Image loaded incorrectly");
+		printf("Image loaded incorrectly %s", file);
 		exit(1);
 	}
 
@@ -31,8 +34,9 @@ inline void TextureResource::LoadFromFile(const char* file) {
 	else if (channels == 4)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
+	glBindTexture(GL_TEXTURE_2D, 0);
 	stbi_image_free(img);
 }
 
