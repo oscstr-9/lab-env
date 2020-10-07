@@ -17,8 +17,6 @@ public:
 	VectorMath4& operator[](int index);
 	MatrixMath operator*(MatrixMath matrixA);
 	VectorMath4 VectorMultiplication(VectorMath4 vectorA);
-	//MatrixMath RotateMatrix(float angle, VectorMath4 dir);
-	//static MatrixMath Identity();
 	MatrixMath TransposeMatrix();
 	MatrixMath InverseMatrix();
 	static MatrixMath ProjectionMatrix(float FOV, float AspectRatio, float Near, float Far);
@@ -39,6 +37,14 @@ inline MatrixMath::MatrixMath(VectorMath4 col1In, VectorMath4 col2In, VectorMath
 	matrix[2] = col3In;
 	matrix[3] = VectorMath4(1);
 }
+
+/// constuctor for x, y, z and empty w
+inline MatrixMath::MatrixMath(float w) {
+	for (int i = 0; i < 3; i++)
+		matrix[i] = VectorMath4();
+	matrix[3] = VectorMath4(w);
+}
+
 // returns translation matrix
 inline MatrixMath MatrixMath::TranslationMatrix(VectorMath3 W) {
 	MatrixMath temp;
@@ -59,12 +65,6 @@ inline MatrixMath Identity() {
 	return temp;
 }
 
-/// constuctor for x, y, z and empty w
-inline MatrixMath::MatrixMath(float w) {
-	for (int  i = 0; i < 3; i++)
-	matrix[i] = VectorMath4();
-	matrix[3] = VectorMath4(w);
-}
 /// [] operator overload
 inline VectorMath4& MatrixMath::operator[](int index) {
 	return matrix[index];
@@ -104,6 +104,15 @@ inline VectorMath4 MatrixMath::VectorMultiplication(VectorMath4 vectorA) {
 		}
 	}
 	return tempVector;
+}
+
+inline MatrixMath ScalarMatrix(VectorMath3 scaleVec) {
+	MatrixMath temp;
+	temp[0] = VectorMath4(scaleVec.x, 0, 0, 0);
+	temp[1] = VectorMath4(0, scaleVec.y, 0, 0);
+	temp[2] = VectorMath4(0, 0, scaleVec.z, 0);
+	temp[3] = VectorMath4(0, 0, 0, 1);
+	return temp;
 }
 
 /// rotates matrix. takes in the rotation angle as float and the rotation axis as VectorMath4
@@ -306,7 +315,6 @@ inline MatrixMath MatrixMath::ProjectionMatrix(float FOV, float AspectRatio, flo
 	perspectiveMatrix[3][2] = (2 * Near * Far) / (Near - Far);
 	perspectiveMatrix[3][3] = 0;
 
-	perspectiveMatrix.PrintMatrix();
 	return perspectiveMatrix;
 }
 

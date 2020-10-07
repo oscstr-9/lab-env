@@ -4,20 +4,21 @@
 #include "TextureResource.h"
 
 
-TextureResource::TextureResource()
+TextureResource::TextureResource(std::string fileIn)
 {
-	//cool
+	file = "textures/"+ fileIn;
 }
 
 void TextureResource::bindTexture(){
 	glBindTexture(GL_TEXTURE_2D, texture);
 	}
 
-void TextureResource::LoadFromFile(const char* file) {
+void TextureResource::LoadFromFile() {
 
 	int width, height, channels;
 
-	unsigned char* img = stbi_load(file, &width, &height, &channels, 0);
+	//Check if picture can be found
+	unsigned char* img = stbi_load(file.c_str(), &width, &height, &channels, 0);
 	if (img == NULL) {
 		printf("Image loaded incorrectly %s", file);
 		exit(1);
@@ -41,5 +42,4 @@ void TextureResource::LoadFromFile(const char* file) {
 }
 
 TextureResource::~TextureResource()
-{
-}
+{glDeleteTextures(1,&texture);}

@@ -2,8 +2,11 @@
 #include "MeshResource.h"
 #include "TextureResource.h"
 
+
 MeshResource::MeshResource(Vertex vertices[], unsigned int indices[], int numOfVertices, int numOfIndicesIn) {
 	numOfIndices = numOfIndicesIn;
+
+
 	glGenBuffers(1, &vertexBuffer);
 	glGenBuffers(1, &indexBuffer);
 
@@ -13,6 +16,12 @@ MeshResource::MeshResource(Vertex vertices[], unsigned int indices[], int numOfV
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * numOfIndices, indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+MeshResource::MeshResource(MeshResource& mesh) {
+	this->vertexBuffer = mesh.vertexBuffer;
+	this->indexBuffer = mesh.indexBuffer;
+	this->numOfIndices = mesh.numOfIndices;
 }
 
 void MeshResource::Render() {
@@ -33,7 +42,7 @@ void MeshResource::Render() {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-MeshResource MeshResource::Cube(float size) {
+std::shared_ptr<MeshResource> MeshResource::Cube(float size) {
 
 						  //Front (red)
 	Vertex vertices[] = { Vertex(VectorMath3(-size / 2,-size / 2,size / 2),VectorMath4(1,0,0,1),1.f/3.f,0),
@@ -80,13 +89,13 @@ MeshResource MeshResource::Cube(float size) {
 							   23,20,21,21,22,23	//Bottom
 	};
 
-	//LoadFromFile("carved_pumpkin.png");
-	return MeshResource(vertices, indices, sizeof(vertices)/sizeof(Vertex), sizeof(indices) / sizeof(unsigned int));
+	return std::make_shared<MeshResource>(vertices, indices, sizeof(vertices)/sizeof(Vertex), sizeof(indices) / sizeof(unsigned int));
 }
 void MeshResource::Destroy() {
 	glDeleteBuffers(1, &vertexBuffer);
 	glDeleteBuffers(1, &indexBuffer);
 }
 MeshResource::~MeshResource() {
+	std::cout << "works" << std::endl;
 	Destroy();
 }

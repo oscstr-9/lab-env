@@ -5,15 +5,21 @@
 SET(files_render_display
 	window.h
 	window.cc
-	MeshResource.h
-	MeshResource.cpp
-	Vertex.h
-	TextureResource.h
-	TextureResource.cpp
 	Camera.h
 	Camera.cpp
+	GraphicsNode.h
+	GraphicsNode.cpp
+	MeshResource.h
+	MeshResource.cpp
+	TextureResource.h
+	TextureResource.cpp
+	ShaderResource.h
+	ShaderResource.cpp
+	Vertex.h
 	stb_Image.h
-)
+	FragShader.glsl
+	VertShader.glsl)
+
 SOURCE_GROUP("display" FILES ${files_render_display})
 
 

@@ -22,6 +22,7 @@ struct VectorMath3
 	VectorMath3 operator*(float multiplier);
 	float Length();
 	void Normalize();
+	VectorMath3 NormalizeNew();
 	float DotProduct(VectorMath3 vectorA);
 	VectorMath3 CrossProduct(VectorMath3 vectorA);
 	void PrintVector();
@@ -89,7 +90,14 @@ inline float VectorMath3::Length() {
 
 // normalizes a vector
 inline void VectorMath3::Normalize() {
+	if (Length() == 0) {return;}
 	*this = *this * (1.0f / Length());
+}
+
+inline VectorMath3 VectorMath3::NormalizeNew() {
+	if (Length() == 0) {return *this;}
+	*this = *this * (1.0f / Length());
+	return *this;
 }
 
 // calculates the dot product between a vector and agument vector
@@ -151,6 +159,7 @@ struct VectorMath4
 	VectorMath4 operator*(float multiplier);
 	float Length();
 	void Normalize();
+	VectorMath4 NormalizeNew();
 	float DotProduct(VectorMath4 vectorA);
 	VectorMath4 CrossProduct(VectorMath4 vectorA);
 	void PrintVector();
@@ -240,7 +249,14 @@ inline float VectorMath4::Length() {
 
 // normalizes a vector
 inline void VectorMath4::Normalize() {
+	if (Length() == 0) { return; }
 	*this  = *this * (1.0f/Length());
+}
+
+inline VectorMath4 VectorMath4::NormalizeNew() {
+	if (Length() == 0) { return *this; }
+	*this = *this * (1.0f / Length());
+	return *this;
 }
 
 // calculates the dot product between a vector and agument vector

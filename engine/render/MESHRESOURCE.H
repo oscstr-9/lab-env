@@ -1,9 +1,10 @@
 #pragma once
-#include "core/MatrixMath.h";
-#include "core/VectorMath.h";
-#include "Vertex.h";
+#include "core/MatrixMath.h"
+#include "core/VectorMath.h"
+#include "Vertex.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <memory>
 
 class MeshResource
 {
@@ -13,7 +14,9 @@ class MeshResource
 public:
 	int numOfIndices;
 	MeshResource(Vertex vertices[], unsigned int indices[], int numOfVertices, int numOfIndicesIn);
-	static MeshResource Cube(float size);
+	MeshResource(MeshResource& mesh);
+	MeshResource();
+	static std::shared_ptr<MeshResource> Cube(float size);
 	void Render();
 	void Destroy();
 

@@ -4,41 +4,43 @@
 using namespace std;
 
 void main() {
-	VectorMath vectorA (7, 4, -1);
-	VectorMath vectorB(-5, 1, 3);
-	VectorMath vectorC (6, -3, 2);
-	VectorMath vectorD (-2, -4, 11, 1);
-	VectorMath f;
-	VectorMath vectorResult;
-	//vectorResult = vectorA + vectorB;
-	//vectorResult.printVector();
-	//vectorResult = vectorB - vectorA;
-	//vectorResult.printVector();
-	//vectorResult = vectorResult * 4;
-	//vectorResult.printVector();
-	//cout << vectorA.len() << endl;
-	////vectorA.normalize();
-	//vectorA.printVector();
+	VectorMath4 vectorA (7, 4, -1,0);
+	VectorMath4 vectorB(-5, 1, 3,0);
+	VectorMath4 vectorC (6, -3, 2,0);
+	VectorMath4 vectorD (-2, -4, 11, 1);
 
-	MatrixMath matrixA(vectorA, vectorB, vectorC);
+	//VectorMath4 vectorResult;
+	//vectorResult = vectorA + vectorB;
+	//vectorResult.PrintVector();
+	//vectorResult = vectorB - vectorA;
+	//vectorResult.PrintVector();
+	//vectorResult = vectorResult * 4;
+	//vectorResult.PrintVector();
+	//cout << vectorA.Length() << endl;
+	//vectorA.Normalize();
+	//vectorA.PrintVector();
+
+	MatrixMath matrixA(vectorA, vectorB, vectorC, vectorD);
 	MatrixMath matrixB(vectorC, vectorD, vectorB);
 
-	//cout << endl;
-	//matrixB.printMatrix();
+	MatrixMath matrixC = matrixA* matrixA;
+	//matrixC.PrintMatrix();
 
-	//cout << endl;
-	//matrixA.vectorMultiplication(vectorC).printVector();
-	//
-	//cout << endl;
-	//matrixA.matrixMultiplication(matrixB).printMatrix();
+	/*cout << endl;
+	matrixB.PrintMatrix();
 
 	cout << endl;
-	matrixA.rotateMatrix(50, VectorMath(1, 0, 0)).printMatrix();
+	matrixA.VectorMultiplication(vectorC).PrintVector();
+	
+	cout << endl;
+	MatrixMath resultMatrix = matrixA * matrixB;
+	resultMatrix.PrintMatrix();
+
+	cout << endl;
+	RotateMatrix(25, VectorMath3(1, 0, 0)).PrintMatrix();
 
 	cout << endl;
 	MatrixMath BD = MatrixMath(vectorA, vectorB, vectorC, vectorD);
-	BD.printMatrix();
-	cout << BD.inverseMatrix();
-
+	BD.PrintMatrix();*/
 
 }
