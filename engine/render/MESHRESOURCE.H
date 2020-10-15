@@ -2,6 +2,8 @@
 #include "core/MatrixMath.h"
 #include "core/VectorMath.h"
 #include "Vertex.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <memory>
@@ -17,6 +19,7 @@ public:
 	MeshResource(MeshResource& mesh);
 	MeshResource();
 	static std::shared_ptr<MeshResource> Cube(float size);
+	static std::shared_ptr<MeshResource> LoadObj(std::string);
 	void Render();
 	void Destroy();
 

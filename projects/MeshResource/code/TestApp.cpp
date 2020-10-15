@@ -11,6 +11,7 @@
 #include "render/ShaderResource.h"
 #include "core/MatrixMath.h"
 #include "render/Camera.h"
+#include "render/LoadObj.h"
 
 using namespace Display;
 namespace Example
@@ -64,9 +65,10 @@ namespace Example
 			shaders = std::make_shared<ShaderResource>();
 			shaders->LoadShader("Engine/Render/VertShader.glsl","Engine/Render/FragShader.glsl");
 			std::shared_ptr<TextureResource> pumpkinTexture = std::make_shared<TextureResource>("pumpkin.png");
-			std::shared_ptr<MeshResource> mesh = MeshResource::Cube(size);
+			std::shared_ptr<MeshResource> cubeMesh = MeshResource::Cube(size);
+			std::shared_ptr<MeshResource> objMesh = MeshResource::LoadObj("test");
 			MatrixMath transform = Identity();
-			cube = new GraphicsNode(mesh, pumpkinTexture, shaders, transform);
+			cube = new GraphicsNode(objMesh, pumpkinTexture, shaders, transform);
 
 			return true;
 		}
@@ -81,6 +83,8 @@ namespace Example
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
+
+		LoadObj obj ("test");
 		
 		shaders->setMat4(camera.GetProjViewMatrix(), "projectionViewMatrix");
 		shaders->setVec4(VectorMath4(1, 1, 1, 1), "colorVector");
