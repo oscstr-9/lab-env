@@ -98,6 +98,16 @@ void ShaderResource::BindShader() {
     glUseProgram(program);
 }
 
+void ShaderResource::setFloat(float floatIn, std::string uniform) {
+    glUseProgram(program);
+    glUniform1f(glGetUniformLocation(program, uniform.c_str()), floatIn);
+}
+
+void ShaderResource::setVec3(VectorMath3 vec3, std::string uniform) {
+    glUseProgram(program);
+    glUniform3fv(glGetUniformLocation(program, uniform.c_str()), 1, (float*)&vec3);
+}
+
 void ShaderResource::setVec4(VectorMath4 vec4, std::string uniform) {
     glUseProgram(program);
     glUniform4fv(glGetUniformLocation(program, uniform.c_str()), 1, (float*)&vec4);

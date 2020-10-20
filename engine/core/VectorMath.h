@@ -1,6 +1,135 @@
 #pragma once
 #include <IOstream>;
 #include <IOmanip>;
+
+struct VectorMath2
+{
+	union {
+		struct
+		{
+			float x;
+			float y;
+		};
+		float coords[2];
+	};
+
+	VectorMath2(float xIn, float yIn);
+	VectorMath2();
+	float& operator[](int index);
+	float operator[](int index)const;
+	VectorMath2 operator+(VectorMath2 vectorA);
+	VectorMath2 operator-(VectorMath2 vectorA);
+	VectorMath2 operator*(float multiplier);
+	float Length();
+	void Normalize();
+	VectorMath2 NormalizeNew();
+	float DotProduct(VectorMath2 vectorA);
+	VectorMath2 CrossProduct(VectorMath2 vectorA);
+	void PrintVector();
+};
+
+// vector constructor for all values
+inline VectorMath2::VectorMath2(float xIn, float yIn)
+{
+	x = xIn;
+	y = yIn;
+}
+
+// empty vector constructor
+inline VectorMath2::VectorMath2()
+{
+	x = 0;
+	y = 0;
+}
+
+// [] operator overload
+inline float& VectorMath2::operator[](int index) {
+	return coords[index];
+}
+
+// [] operator overload
+inline float VectorMath2::operator[](int index)const {
+	return coords[index];
+}
+
+// + operator overload
+inline VectorMath2 VectorMath2::operator+(VectorMath2 vectorA) {
+	VectorMath2 temp;
+	for (int i = 0; i < 2; i++)
+	{
+		temp[i] = coords[i] + vectorA[i];
+	}
+	return temp;
+}
+
+// - operator overload
+inline VectorMath2 VectorMath2::operator-(VectorMath2 vectorA) {
+	VectorMath2 temp;
+	for (int i = 0; i < 2; i++)
+	{
+		temp[i] = coords[i] - vectorA[i];
+	}
+	return temp;
+}
+
+// * operator overload
+inline VectorMath2 VectorMath2::operator*(float multiplier) {
+	VectorMath2 temp;
+	for (int i = 0; i < 2; i++) {
+		temp[i] = coords[i] * multiplier;
+	}
+	return temp;
+}
+
+// calculates and returns the length of a vector
+inline float VectorMath2::Length() {
+	return sqrt(pow(x, 2) + pow(y, 2));
+}
+
+// normalizes a vector
+inline void VectorMath2::Normalize() {
+	if (Length() == 0) { return; }
+	*this = *this * (1.0f / Length());
+}
+
+inline VectorMath2 VectorMath2::NormalizeNew() {
+	if (Length() == 0) { return *this; }
+	*this = *this * (1.0f / Length());
+	return *this;
+}
+
+// calculates the dot product between a vector and agument vector
+inline float VectorMath2::DotProduct(VectorMath2 vectorA) {
+	float temp = 0;
+	for (int i = 0; i < 2; i++)
+	{
+		temp += coords[i] * vectorA[i];
+	}
+	return temp;
+}
+
+// calculates the cross product between a vector and agument vector
+inline VectorMath2 VectorMath2::CrossProduct(VectorMath2 vectorA) {
+	VectorMath2 temp;
+	//x*y
+	temp[2] = (coords[0] * vectorA[1]) - (coords[1] * vectorA[0]);
+	//y*z
+	temp[0] = (coords[1] * vectorA[2]) - (coords[2] * vectorA[1]);
+	return temp;
+}
+
+// this function prints vector3s
+inline void VectorMath2::PrintVector() {
+	for (int i = 0; i < 2; i++)
+	{
+		std::cout << coords[i];
+		std::cout << " ";
+	}
+	std::cout << std::endl;
+}
+
+//--------------------------------------------------------------------------------------\\
+
 struct VectorMath3
 {
 	union {

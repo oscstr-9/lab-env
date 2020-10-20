@@ -5,9 +5,8 @@
 class Camera
 {
 private:
-	VectorMath3 axis;
 	VectorMath3 pos;
-	float rad = 0;
+	MatrixMath rotMat = Identity();
 	MatrixMath projectionMat;
 
 public:
@@ -15,5 +14,7 @@ public:
 	~Camera();
 	void SetRotation(VectorMath3 axisIn, float radIn );
 	void SetPosition(VectorMath3 posIn);
+	void SetRotMat(MatrixMath rotMatIn);
 	MatrixMath GetProjViewMatrix();
+	VectorMath3 GetPosition();
 };

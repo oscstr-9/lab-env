@@ -15,7 +15,8 @@ SET(files_render_display
 	TextureResource.cpp
 	ShaderResource.h
 	ShaderResource.cpp
-	LoadObj.h
+	Lighting.cpp
+	Lighting.h
 	Vertex.h
 	stb_Image.h
 	FragShader.glsl

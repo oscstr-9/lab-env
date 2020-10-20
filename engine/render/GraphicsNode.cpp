@@ -15,7 +15,6 @@ GraphicsNode::~GraphicsNode()
 
 void GraphicsNode::Draw()
 {
-    texture->LoadFromFile();
     texture->bindTexture();
     shader->BindShader();
     shader->setMat4(transform, "posMatrix");

@@ -32,14 +32,20 @@ private:
 
 	float size = 1;
 	float speed = 0.003;
+
 	bool up = false;
 	bool down = false;
 	bool left = false;
 	bool right = false;
+	bool forward = false;
+	bool backward = false;
+
 	MatrixMath rotMat = Identity();
 	MatrixMath posMat = Identity();
+	VectorMath3 posVec = VectorMath3(0, 0, -5);
 	std::shared_ptr<ShaderResource> shaders;
 	Display::Window* window;
-	GraphicsNode* cube;
+	GraphicsNode* sphere;
+	GraphicsNode* objObject;
 };
 } // namespace Example
